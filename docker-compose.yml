@@ -1,6 +1,8 @@
 services:
   zookeeper:
     image: bitnami/zookeeper:3.8  # Update to a newer Zookeeper image
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes  # Allow unauthenticated connections
     ports:
       - "2181:2181"
 
