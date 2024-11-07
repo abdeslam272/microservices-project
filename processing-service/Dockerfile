@@ -7,8 +7,8 @@ USER root
 # Fix missing directories and install CA certificates
 RUN mkdir -p /var/lib/apt/lists/partial && apt-get update && apt-get install -y ca-certificates && update-ca-certificates
 
-# Switch back to the default user (spark) for the application
-USER 1001  # Assuming 1001 is the default user ID for the bitnami/spark image, adjust if needed
+# Switch back to the default user (spark or identified user)
+USER spark  
 
 WORKDIR /app
 
