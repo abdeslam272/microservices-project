@@ -1,8 +1,14 @@
 # Dockerfile for processing service
 FROM bitnami/spark:latest
 
+# Switch to root user for installing ca-certificates
+USER root
+
 # Fix missing directories and install CA certificates
 RUN mkdir -p /var/lib/apt/lists/partial && apt-get update && apt-get install -y ca-certificates && update-ca-certificates
+
+# Switch back to the default user (spark) for the application
+USER 1001  # Assuming 1001 is the default user ID for the bitnami/spark image, adjust if needed
 
 WORKDIR /app
 
