@@ -23,6 +23,8 @@ services:
 
   cassandra:
     image: cassandra:4.0  # Updated Cassandra image
+    environment:
+      - CASSANDRA_CLUSTER_NAME=Test Cluster
     ports:
       - "9042:9042"
     volumes:
@@ -34,6 +36,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
+      start_period: 30s
 
   ingestion-service:
     build: ./ingestion-service  # Path to your ingestion service Dockerfile
@@ -64,6 +67,8 @@ services:
         condition: service_healthy
     networks:
       - kafka_network
+    environment:
+      - CASSANDRA_HOST=cassandra  # The service name 'cassandra' is used as the hostname
 
 volumes:
   cassandra-data:

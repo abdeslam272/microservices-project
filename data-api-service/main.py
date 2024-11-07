@@ -1,8 +1,12 @@
+import os
 from fastapi import FastAPI
 from cassandra.cluster import Cluster
 
 app = FastAPI()
-cluster = Cluster(["cassandra"])
+
+# Read the Cassandra host from the environment variable or fallback to 'localhost'
+cassandra_host = os.getenv("CASSANDRA_HOST", "localhost")
+cluster = Cluster([cassandra_host])
 session = cluster.connect("analytics")
 
 @app.get("/events/")
