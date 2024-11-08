@@ -31,43 +31,51 @@ apt-get install -y iputils-ping
 To Run Docker Exec with root privileges:
 docker exec -u 0 -it <container_name> bash
 
-The container microservices-project-ingestion-service-1 can communicate with microservices-project-kafka-1, meaning they are on the same Docker network, and Docker's internal networking is working fine.
+Network Connectivity Observations:
+After testing, the following connectivity was observed between containers:
 
-from microservices-project-ingestion-service-1 we can ping microservices-project-zookeeper-1 using network microservices-project_default
-from microservices-project-ingestion-service-1 we can not ping microservices-project-cassandra-1
-from microservices-project-ingestion-service-1 we can ping microservices-project-kafka-1 using network microservices-project_default
-from microservices-project-ingestion-service-1 we can not ping microservices-project-data-api-service-1
-from microservices-project-ingestion-service-1 we can not ping microservices-project-processing-service-1
+- microservices-project-ingestion-service-1:
 
-from microservices-project-data-api-service-1 we can not ping microservices-project-zookeeper-1
-from microservices-project-data-api-service-1 we can ping microservices-project-cassandra-1 using network microservices-project_kafka_network
-from microservices-project-data-api-service-1 we can not ping microservices-project-kafka-1
-from microservices-project-data-api-service-1 we can not ping microservices-project-ingestion-service-1
-from microservices-project-data-api-service-1 we can ping microservices-project-processing-service-1 using network microservices-project_kafka_network
+Can ping microservices-project-zookeeper-1 (network: microservices-project_default)
+Cannot ping microservices-project-cassandra-1
+Can ping microservices-project-kafka-1 (network: microservices-project_default)
+Cannot ping microservices-project-data-api-service-1
+Cannot ping microservices-project-processing-service-1
+- microservices-project-data-api-service-1:
 
-from microservices-project-processing-service-1 we can not ping microservices-project-zookeeper-1
-from microservices-project-processing-service-1 we can ping microservices-project-cassandra-1 using network microservices-project_kafka_network
-from microservices-project-processing-service-1 we can not ping microservices-project-kafka-1
-from microservices-project-processing-service-1 we can not ping microservices-project-ingestion-service-1
-from microservices-project-processing-service-1 we can ping microservices-project-data-api-service-1 using network microservices-project_kafka_network
+Cannot ping microservices-project-zookeeper-1
+Can ping microservices-project-cassandra-1 (network: microservices-project_kafka_network)
+Cannot ping microservices-project-kafka-1
+Cannot ping microservices-project-ingestion-service-1
+Can ping microservices-project-processing-service-1 (network: microservices-project_kafka_network)
+- microservices-project-processing-service-1:
 
-from microservices-project-kafka-1 we can ping microservices-project-zookeeper-1 using network microservices-project_default
-from microservices-project-kafka-1 we can not ping microservices-project-cassandra-1
-from microservices-project-kafka-1 we can ping microservices-project-ingestion-service-1 using network microservices-project_default
-from microservices-project-kafka-1 we can not ping microservices-project-data-api-service-1
-from microservices-project-kafka-1 we can not ping microservices-project-processing-service-1
+Cannot ping microservices-project-zookeeper-1
+Can ping microservices-project-cassandra-1 (network: microservices-project_kafka_network)
+Cannot ping microservices-project-kafka-1
+Cannot ping microservices-project-ingestion-service-1
+Can ping microservices-project-data-api-service-1 (network: microservices-project_kafka_network)
+- microservices-project-kafka-1:
 
-from microservices-project-zookeeper-1 we can ping microservices-project-kafka-1 using network microservices-project_default
-from microservices-project-zookeeper-1 we can not ping microservices-project-cassandra-1
-from microservices-project-zookeeper-1 we can ping microservices-project-ingestion-service-1 using network microservices-project_default
-from microservices-project-zookeeper-1 we can not ping microservices-project-data-api-service-1
-from microservices-project-zookeeper-1 we can not ping microservices-project-processing-service-1
+Can ping microservices-project-zookeeper-1 (network: microservices-project_default)
+Cannot ping microservices-project-cassandra-1
+Can ping microservices-project-ingestion-service-1 (network: microservices-project_default)
+Cannot ping microservices-project-data-api-service-1
+Cannot ping microservices-project-processing-service-1
+- microservices-project-zookeeper-1:
 
-from microservices-project-cassandra-1 we can not ping microservices-project-zookeeper-1
-from microservices-project-cassandra-1 we can not ping microservices-project-kafka-1
-from microservices-project-cassandra-1 we can not ping microservices-project-ingestion-service-1
-from microservices-project-cassandra-1 we can ping microservices-project-data-api-service-1 using network microservices-project_kafka_network
-from microservices-project-cassandra-1 we can ping microservices-project-processing-service-1 using network microservices-project_kafka_network
+Can ping microservices-project-kafka-1 (network: microservices-project_default)
+Cannot ping microservices-project-cassandra-1
+Can ping microservices-project-ingestion-service-1 (network: microservices-project_default)
+Cannot ping microservices-project-data-api-service-1
+Cannot ping microservices-project-processing-service-1
+- microservices-project-cassandra-1:
+
+Cannot ping microservices-project-zookeeper-1
+Cannot ping microservices-project-kafka-1
+Cannot ping microservices-project-ingestion-service-1
+Can ping microservices-project-data-api-service-1 (network: microservices-project_kafka_network)
+Can ping microservices-project-processing-service-1 (network: microservices-project_kafka_network)
 
 
 
