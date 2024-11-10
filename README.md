@@ -92,4 +92,18 @@ Can ping microservices-project-data-api-service-1 (network: microservices-projec
 Can ping microservices-project-processing-service-1 (network: microservices-project_kafka_network)
 
 
+## Expected Connectivity for the Project
+- Zookeeper: Should be accessible only by Kafka.
+- Kafka: Should be accessible by:
+  Zookeeper (for coordination)
+  Ingestion Service (to produce messages)
+  Processing Service (to consume messages)
+- Cassandra: Should be accessible by:
+  Processing Service (to save processed data)
+  Data API Service (to read data)
+  Ingestion Service: Should be able to communicate with Kafka to publish messages.
+- Processing Service: Should be able to:
+  Communicate with Kafka (for reading messages)
+  Write to Cassandra (to save processed data)
+- Data API Service: Should be able to read data from Cassandra.
 
