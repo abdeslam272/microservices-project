@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   zookeeper:
     image: bitnami/zookeeper:3.8  # Update to a newer Zookeeper image
@@ -5,6 +6,8 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes  # Allow unauthenticated connections
     ports:
       - "2181:2181"
+    networks:
+      - kafka_network
 
   kafka:
     image: bitnami/kafka:3.3  # Update to a newer Kafka image
@@ -18,6 +21,8 @@ services:
       - "9092:9092"
     depends_on:
       - zookeeper
+    networks:
+      - kafka_network
 
   cassandra:
     image: cassandra:4.0  # Updated Cassandra image
@@ -45,6 +50,8 @@ services:
     restart: always
     ports:
       - "8000:8000"
+    networks:
+      - kafka_network
 
   processing-service:
     build:
@@ -58,15 +65,15 @@ services:
   data-api-service:
     build:
       context: ./data-api-service
-    ports:
-      - "8001:8001"
     depends_on:
       cassandra:
         condition: service_healthy
-    networks:
-      - kafka_network
     environment:
       - CASSANDRA_HOST=cassandra  # The service name 'cassandra' is used as the hostname
+    ports:
+      - "8001:8001"
+    networks:
+      - kafka_network
 
 volumes:
   cassandra-data:
