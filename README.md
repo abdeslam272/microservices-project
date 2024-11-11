@@ -154,3 +154,57 @@ This allows you to retrieve stored events by making HTTP requests to this servic
 Cassandra:
 
 Stores the processed events in a table within a keyspace called analytics. The table events stores event details, allowing you to query data for further analysis or display.
+
+
+
+
+Testing the Project
+Here’s how to test each component and ensure that data flows correctly through the pipeline:
+
+Start All Services:
+
+Run docker-compose up -d --build to start all services in the background.
+Ensure that all containers are up by checking docker-compose ps.
+Verify Cassandra Initialization:
+
+Cassandra should automatically create the analytics keyspace and events table upon startup, using the script in scripts/init_cassandra.cql.
+To confirm, log into Cassandra with:
+bash
+Copier le code
+docker exec -it <cassandra_container_id> cqlsh
+Run DESCRIBE keyspaces; and USE analytics; to verify that the events table exists.
+Test the Ingestion Service:
+
+Send an event to the ingestion service to simulate real-time data ingestion:
+bash
+Copier le code
+curl -X POST "http://localhost:8000/event/" -H "Content-Type: application/json" -d '{"user_id": "user123", "event": "page_view"}'
+This should send the event to the clickstream topic in Kafka.
+Check Kafka for Incoming Messages:
+
+Verify that the event was added to Kafka’s clickstream topic:
+bash
+Copier le code
+docker exec -it <kafka_container_id> /opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic clickstream --from-beginning
+You should see the event message in the console.
+Verify Spark Processing:
+
+The processing-service should automatically consume messages from Kafka, process them, and store them in Cassandra.
+Check logs for processing-service to ensure it’s reading from Kafka and writing to Cassandra:
+bash
+Copier le code
+docker-compose logs processing-service
+Look for messages indicating that the data is being processed and stored.
+Test the Data API Service:
+
+Once the data is processed and stored in Cassandra, you can retrieve it using the data API service:
+bash
+
+curl -X GET "http://localhost:8001/events/"
+This should return a JSON response with the processed events from the events table in Cassandra.
+Summary
+Ingestion Service receives events and sends them to Kafka.
+Kafka holds the events until they’re consumed.
+Processing Service (Spark) consumes events from Kafka, processes them, and writes the output to Cassandra.
+Data API Service provides a way to retrieve the stored, processed events from Cassandra.
+Each service works together to form a complete pipeline for ingesting, processing, and accessing real-time event data. This setup is typical for a real-time analytics system, where data flows from ingestion, through processing, to storage, and finally, to API-based querying.
