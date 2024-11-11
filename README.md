@@ -107,15 +107,14 @@ Can ping microservices-project-processing-service-1 (network: microservices-proj
   Write to Cassandra (to save processed data)
 - Data API Service: Should be able to read data from Cassandra.
 
-## Check Cassandra: Access the Cassandra container and verify if the event was inserted:
+## Check Cassandra: Access the Cassandra container and verify if the event was inserted
 
-```bash
+   ```bash
    docker exec -it microservices-project-cassandra-1 cqlsh
-
 
 ## Run the Query: In the cqlsh shell:
 
-```cql
+   ```cql
    USE analytics;
    SELECT * FROM events;
 
@@ -132,3 +131,26 @@ docker exec -it microservices-project-kafka-1 /bin/bash
 
 # List Kafka topics to confirm the "clickstream" topic exists
 kafka-topics --list --bootstrap-server kafka:9092
+
+
+
+## Project Overview
+Ingestion Service (ingestion-service):
+
+This service provides an API to ingest event data via HTTP requests. When an event is posted to this service, it sends the data to Kafka’s clickstream topic.
+Technology: FastAPI (for API handling) and kafka-python (for Kafka integration).
+Kafka:
+
+Acts as the message broker to store and distribute the incoming events.
+The ingestion service sends events to Kafka, and the processing service consumes them from Kafka to process further.
+Processing Service (processing-service):
+
+This service uses Spark to read events from the clickstream Kafka topic, processes the data in real time, and writes the results to Cassandra.
+Spark processes each event, parses it, and stores it in a Cassandra table within the analytics keyspace.
+Data API Service (data-api-service):
+
+Provides an API to query processed data stored in Cassandra.
+This allows you to retrieve stored events by making HTTP requests to this service, making it easy to view or analyze processed data.
+Cassandra:
+
+Stores the processed events in a table within a keyspace called analytics. The table events stores event details, allowing you to query data for further analysis or display.
