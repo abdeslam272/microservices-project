@@ -110,14 +110,14 @@ Can ping microservices-project-processing-service-1 (network: microservices-proj
 ## Check Cassandra: Access the Cassandra container and verify if the event was inserted:
 
 ```bash
-docker exec -it microservices-project-cassandra-1 cqlsh
+   docker exec -it microservices-project-cassandra-1 cqlsh
 
 
 ## Run the Query: In the cqlsh shell:
 
 ```cql
-USE analytics;
-SELECT * FROM events;
+   USE analytics;
+   SELECT * FROM events;
 
 
 ##  Ensure Data is Being Sent to Kafka
