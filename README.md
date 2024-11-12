@@ -106,6 +106,12 @@ Can ping microservices-project-processing-service-1 (network: microservices-proj
   Communicate with Kafka (for reading messages)
   Write to Cassandra (to save processed data)
 - Data API Service: Should be able to read data from Cassandra.
+- 
+## to start the containers:
+docker-compose up -d
+
+## to start a spark shell with the container processing-service:
+spark-shell --conf spark.jars.ivy=/tmp/.ivy
 
 ## Check Cassandra: Access the Cassandra container and verify if the event was inserted
 
