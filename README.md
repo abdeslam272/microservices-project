@@ -183,10 +183,32 @@ This should send the event to the clickstream topic in Kafka.
 Check Kafka for Incoming Messages:
 
 Verify that the event was added to Kafka’s clickstream topic:
-bash
+Steps to Access the Kafka Container with PowerShell
+Open PowerShell and ensure it’s running with appropriate permissions.
+
+Run the following command to access the Kafka container using PowerShell’s path syntax:
+
+powershell
 Copier le code
-docker exec -it <kafka_container_id> /opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic clickstream --from-beginning
-You should see the event message in the console.
+docker exec -it microservices-project-kafka-1 sh
+If your Kafka container image uses a Unix-based OS, sh should be available even if bash is not.
+
+Once inside, locate the Kafka consumer script:
+
+sh
+Copier le code
+ls /opt/bitnami/kafka/bin
+Run the Kafka console consumer from within the container, using the correct path:
+
+sh
+Copier le code
+./kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic clickstream --from-beginning
+
+'''sh
+cd /opt/bitnami/kafka/bin
+./kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic clickstream --from-beginning
+
+----------
 Verify Spark Processing:
 
 The processing-service should automatically consume messages from Kafka, process them, and store them in Cassandra.
