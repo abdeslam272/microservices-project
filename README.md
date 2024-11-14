@@ -138,7 +138,7 @@ Here’s how to test each component and ensure that data flows correctly through
 ## Start All Services:
 to start all services in the background:
    ```bash
-Run docker-compose up -d --build
+docker-compose up -d --build
    ```
 
 Ensure that all containers are up by checking
